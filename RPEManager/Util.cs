@@ -21,6 +21,11 @@ internal class Util
         return list.Contains(value);
     }
 
+    public static bool IfListContains<LT>(LT value,int _ = 0, LT[] list)
+    {
+        return list.Contains(value);
+    }
+
     public static int Which<T>(T[] items, LineFormatter formatter)
     {
         while (true)

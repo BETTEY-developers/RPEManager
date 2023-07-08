@@ -8,6 +8,12 @@ namespace RPEManager;
 
 internal class Program
 {
+    struct Chart
+    {
+        public string RelativePath;
+        public string Name;
+        public string 
+    }
 
     public delegate string LineFormatter(params object[] items);
     public delegate bool ControlCtrlDelegate(int CtrlType);
@@ -393,7 +399,7 @@ internal class Program
             {
                 case "资源文件夹路径":
                 case "ResourcePath":
-                    CurrentSettings.ResourcePath = Last((ok, no) =>
+                    CurrentSettings[v] = Last((ok, no) =>
                     {
                         WriteLogo();
                         string input = GetInput<string>(desc: "资源文件夹路径");
@@ -425,11 +431,10 @@ internal class Program
                     break;
                 case "使用默认参数":
                 case "UseDefaultValue":
-                    CurrentSettings.UseDefaultValue = Last((ok, no) =>
+                    CurrentSettings[v] = Last((ok, no) =>
                     {
                         WriteLogo();
                         string input = "false";
-                        bool b = false;
                         try
                         {
                             input = GetInput<string>(tip: "true|false");
@@ -437,9 +442,8 @@ internal class Program
                             {
                                 mok();
                                 ok();
-                                return false;
+                                return input;
                             }
-                            b = As<bool>(input);
                         }
                         catch (FormatException)
                         {
@@ -447,7 +451,7 @@ internal class Program
                             Console.WriteLine("输入不正确哦~");
                             Console.ReadLine();
                             no();
-                            return false;
+                            return input;
                         }
 
                         WriteLogo();
@@ -455,14 +459,14 @@ internal class Program
                         Console.ReadLine();
                         ok();
 
-                        return b;
+                        return input;
                     });
 
                     break;
 
                 case "默认参数":
                 case "DefaultValueItems":
-                    CurrentSettings.DefaultValueItems = Last((ok, no) =>
+                    CurrentSettings[v] = Last((ok, no) =>
                     {
                         WriteLogo();
 
@@ -472,25 +476,24 @@ internal class Program
                         {
                             mok();
                             ok();
-                            return Empty<string>();
+                            return input;
                         }
                         WriteLogo();
                         Console.WriteLine("设置成功！");
                         Console.ReadLine();
 
                         ok();
-                        return input.Split(",");
+                        return input;
                     });
 
                     break;
 
                 case "新页输出标识":
                 case "NewPageWriteLogo":
-                    CurrentSettings.NewPageWriteLogo = Last((ok, no) =>
+                    CurrentSettings[v] = Last((ok, no) =>
                     {
                         WriteLogo();
                         string input = "false";
-                        bool b = false;
                         try
                         {
                             input = GetInput<string>(tip: "true|false");
@@ -498,7 +501,7 @@ internal class Program
                             {
                                 mok();
                                 ok();
-                                return false;
+                                return input;
                             }
 
                         }
@@ -508,7 +511,7 @@ internal class Program
                             Console.WriteLine("输入不正确哦~");
                             Console.ReadLine();
                             no();
-                            return false;
+                            return input;
                         }
 
                         WriteLogo();
@@ -516,7 +519,7 @@ internal class Program
                         Console.ReadLine();
                         ok();
 
-                        return b;
+                        return input;
 
                     });
                     break;
@@ -563,9 +566,36 @@ internal class Program
 
             lines.Add("退出        Exit");
             var result = GetInput<string>(desc: FormatLines(lines.ToArray()));
+            if(!IfListContains(result, ChartInfoKeyChinese.Keys.ToArray()
+                                      .Concat(
+                                        ChartInfoKeyChinese.Values
+                                        .ToArray()
+                                        .Concat(
+                                         new string[] { 
+                                          "退出", "Exit" 
+                                         }))
+                                      .ToArray()))
+            {
+                WriteLogo();
+                Console.WriteLine("输入不正确哦~");
+                Console.ReadLine();
+                no();
+                return "";
+            }
             ok();
             return result;
         });
+
+        switch (i)
+        {
+            case "Exit":
+            case "退出":
+                return;
+            case "Name":
+            case "名称":
+                WriteLogo();
+                var name = ;
+        }
     }
 
     static void OperatorMenu()
