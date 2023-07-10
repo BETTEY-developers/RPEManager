@@ -125,7 +125,7 @@ internal class Program
         }
     }
 
-    static void ChartOperator(string name, string[] ConstArg, Action<string, string, string[]> @delegate)
+    static void ForEachCharts(string name, string[] ConstArg, Action<string, string, string[]> @delegate)
     {
         string[] folders = FindChartFolder(name);
 
@@ -151,7 +151,7 @@ internal class Program
 
     static void RemoveAutosave(string name, string[] options)
     {
-        ChartOperator(name, options, (folder, _, options) =>
+        ForEachCharts(name, options, (folder, _, options) =>
         {
             RemoveAutosaveInternal(folder, options);
         });
@@ -159,7 +159,7 @@ internal class Program
 
     static void RemoveChart(string name, string[] options)
     {
-        ChartOperator(name, options, (folder, id, options) =>
+        ForEachCharts(name, options, (folder, id, options) =>
         {
             if (HasOption("--nmtb", options))
                 Directory.Delete(folder.Replace("\r", ""), true);
@@ -180,7 +180,7 @@ internal class Program
 
     static void ToPEZ(string name)
     {
-        ChartOperator(name, null, (folder, Name, _) =>
+        ForEachCharts(name, null, (folder, Name, _) =>
         {
             using System.IO.Compression.ZipArchive zipArchive = new(File.Create(string.Join("\\", folder.Split("\\")[..^1]) + "\\" + Name.Replace("\r", "") + ".pez"), System.IO.Compression.ZipArchiveMode.Create);
             var id = folder.Split("\\")[^1].Replace("\r", "");

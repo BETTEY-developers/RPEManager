@@ -1,4 +1,5 @@
-﻿using static RPEManager.Program;
+﻿using System.Text;
+using static RPEManager.Program;
 
 namespace RPEManager;
 
@@ -21,7 +22,7 @@ internal class Util
         return list.Contains(value);
     }
 
-    public static bool IfListContains<LT>(LT value,int _ = 0, LT[] list)
+    public static bool IfListContains<LT>(LT value, LT[] list, int _ = 0)
     {
         return list.Contains(value);
     }
@@ -94,4 +95,17 @@ internal class Util
         Console.WriteLine($"请输入{(desc != "" ? desc : "值")}{(tip != "" ? $"（{tip.Split("|")[0]}或{tip.Split("|")[1]})" : "")}");
         return inputfunction == null ? As<T>(Console.ReadLine()) : As<T>(inputfunction());
     }
-}
+
+    public static string OutputListItemAsLine(int linelength, params string[] items)
+    {
+        StringBuilder result = new();
+        int current = 0;
+        foreach(var item in items)
+        {
+            result.Append(item) ;
+            current = (linelength / items.Length) - Encoding.Default.GetByteCount(item);
+            while (current-->0)result.Append(' ');
+        }
+        return result.ToString();
+    }
+} 
